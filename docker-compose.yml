@@ -1,0 +1,44 @@
+# services:
+#   server:
+#     build:
+#       context: ./server
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./server/.env
+#     container_name: hireai-server
+
+#   client:
+#     build:
+#       context: ./client
+#       args:
+#         # This URL points to the server container on Docker's internal network
+#         VITE_BACKEND_API_URL: http://server:3000 
+#     ports:
+#       - "5173:80" # Map host port 5173 to container port 80
+#     container_name: hireai-client
+#     depends_on:
+#       - server
+
+
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+    container_name: hireai-server
+
+  client:
+    build:
+      context: ./client
+      args:
+        # This URL points to the server container on Docker's internal network
+        VITE_BACKEND_API_URL: http://server:3000 
+    ports:
+      - "5173:80" # Map host port 5173 to container port 80
+    container_name: hireai-client
+    depends_on:
+      - server
