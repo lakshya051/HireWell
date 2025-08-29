@@ -32,7 +32,7 @@ services:
   client:
     image: <your-acr-name>.azurecr.io/hirewell-client:v1
     ports:
-      - "5173:80"
+      - "80:80"
     container_name: hireai-client
     depends_on:
       - server
