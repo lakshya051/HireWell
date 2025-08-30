@@ -20,9 +20,27 @@
 #     depends_on:
 #       - server
 
+# services:
+#   server:
+#     image: hirewell.azurecr.io/hirewell-server:v1
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./server/.env
+#     container_name: hireai-server
+
+#   client:
+#     image: <your-acr-name>.azurecr.io/hirewell-client:v1
+#     ports:
+#       - "80:80"
+#     container_name: hireai-client
+#     depends_on:
+#       - server
+
+
 services:
   server:
-    image: hirewell.azurecr.io/hirewell-server:v1
+    image: <your-acr-name>.azurecr.io/hirewell-server:v1
     ports:
       - "3000:3000"
     env_file:
