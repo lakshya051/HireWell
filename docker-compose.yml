@@ -40,7 +40,7 @@
 
 services:
   server:
-    image: <your-acr-name>.azurecr.io/hirewell-server:v1
+    image: hirewellapp.azurecr.io/hirewell-server:v1
     ports:
       - "3000:3000"
     env_file:
@@ -48,7 +48,7 @@ services:
     container_name: hireai-server
 
   client:
-    image: <your-acr-name>.azurecr.io/hirewell-client:v1
+    image: hirewellapp.azurecr.io/hirewell-client:v1
     ports:
       - "80:80"
     container_name: hireai-client
