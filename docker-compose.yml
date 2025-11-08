@@ -1,0 +1,99 @@
+# services:
+#   server:
+#     build:
+#       context: ./server
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./server/.env
+#     container_name: hireai-server
+
+#   client:
+#     build:
+#       context: ./client
+#       args:
+#         # This URL points to the server container on Docker's internal network
+#         VITE_BACKEND_API_URL: http://server:3000 
+#     ports:
+#       - "5173:80" # Map host port 5173 to container port 80
+#     container_name: hireai-client
+#     depends_on:
+#       - server
+
+# services:
+#   server:
+#     image: hirewell.azurecr.io/hirewell-server:v1
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./server/.env
+#     container_name: hireai-server
+
+#   client:
+#     image: <your-acr-name>.azurecr.io/hirewell-client:v1
+#     ports:
+#       - "80:80"
+#     container_name: hireai-client
+#     depends_on:
+#       - server
+
+
+# services:
+#   server:
+#     image: hirewellapp.azurecr.io/hirewell-server:v1
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./server/.env
+#     container_name: hireai-server
+
+#   client:
+#     image: hirewellapp.azurecr.io/hirewell-client:v1
+#     ports:
+#       - "80:80"
+#     container_name: hireai-client
+#     depends_on:
+#       - server
+
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  server:
+    image: hirewellapp.azurecr.io/hirewell-server:v1
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+    container_name: hireai-server
+    depends_on:
+      - kafka
+
+  client:
+    image: hirewellapp.azurecr.io/hirewell-client:v1
+    ports:
+      - "80:80"
+    container_name: hireai-client
+    depends_on:
+      - server
