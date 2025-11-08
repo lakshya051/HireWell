@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const express = require('express');
 // const router = express.Router();
 // const Interview = require('../Schema/InterviewSchema');
@@ -174,15 +175,25 @@
 // module.exports = router;
 
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 const express = require('express');
 const router = express.Router();
 const Interview = require('../Schema/InterviewSchema');
 const Job = require('../Schema/JobSchema');
+<<<<<<< HEAD
 const auth = require('../middleware/auth');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require("dotenv").config();
 
 const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+=======
+
+const auth = require('../middleware/auth');
+const { GoogleGenAI } = require("@google/genai");
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 
 // Start interview for anonymous candidate
 router.post('/start', async (req, res) => {
@@ -193,6 +204,7 @@ router.post('/start', async (req, res) => {
     if (!job) return res.status(404).json({ error: 'Job not found' });
 
     // Generate interview questions based on job
+<<<<<<< HEAD
     const prompt = `
     Generate 5 code-based technical interview questions (with example code)
     requiring the user to write short to medium-level code answers.
@@ -217,6 +229,31 @@ router.post('/start', async (req, res) => {
         "Is JS single-threaded or not?",
         "What are props in JS? Write basic code for it.",
         "Describe the working of async/await via code.",
+=======
+    const prompt = `Generate 5 code based technical interview questions with the example code provided that reuire user to write the code  also the answer required  must be short and medium level difficulty   for a ${job.title} position requiring skills: ${job.skillsRequired.join(', ')}. 
+    Return ONLY a JSON array of strings, no extra text:
+    ["question1", "question2", "question3", "question4", "question5"]`;
+
+    const result = await ai.models.generateContent({
+      model: "gemini-2.0-flash", // or "gemini-2.0-pro", based on access
+      contents: [{ role: "user", parts: [{ text: prompt }] }]
+    });
+
+   let questions;
+    try {
+      const textOutput = result.text;
+      let cleanResponse = textOutput.trim();
+      cleanResponse = cleanResponse.replace(/^```json\s*|\s*```$/g, '');
+      // console.log(cleanResponse)
+      questions = JSON.parse(cleanResponse);
+    } catch (e) {
+      // Fallback questions
+      questions = [
+        "Write a code to describe promise in js",
+        "Is js single threaded or not ?",
+        "What are props in js write basic code for it ?",
+        "Describe the working of async await via code ",
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
         "Where do you see yourself in 5 years?"
       ];
     }
@@ -246,6 +283,7 @@ router.post('/submit/:interviewId', async (req, res) => {
 
     if (!interview) return res.status(404).json({ error: 'Interview not found' });
 
+<<<<<<< HEAD
     const prompt = `
     Score the following answers for each question in "${interview.questions.map(q => q.question).join('; ')}"
     on a scale of 0 to 100 based on relevance, clarity, and depth.
@@ -277,6 +315,46 @@ router.post('/submit/:interviewId', async (req, res) => {
       score: Math.round(score / interview.questions.length)
     }));
 
+=======
+    // Score answers using AI
+    const scoredQuestions = [];
+    const prompt = `Score the following answer to the question "${interview.questions}" on a scale of 0 to 100 based on relevance, clarity, and depth:\n\nAnswer: "${answers}"\n\n you have do strict marking each question holds equal weight .Return an array with ONLY a number between 0 and 100. and the short report about candidate explaing is he a good fit for the job or not. like [0,"Candidate is not a good fit due to lack of relevant experience."]`;
+    const result = await ai.models.generateContent({
+      model: "gemini-2.0-flash", // or "gemini-2.0-pro", based on access
+      contents: [{ role: "user", parts: [{ text: prompt }] }]
+    });
+
+    let score;
+    let report ;
+    try {
+      let textOutput = result.text;
+       textOutput = textOutput.trim();
+      // console.log(textOutput.trim());
+      textOutput = textOutput.replace(/^```json\s*|\s*```$/g, '');
+    
+      console.log(textOutput)
+       textOutput = JSON.parse(textOutput);
+      report=textOutput[1];
+      score = parseFloat(textOutput[0]);
+      console.log(report,"and ",score)
+      if (isNaN(score) || score < 0 || score > 100) {
+        score = 0; // Fallback to 0 if scoring fails
+      }
+    } catch (e) {
+      score = 0; // Fallback to 0 if parsing fails
+    }
+    for (let i = 0; i < interview.questions.length; i++) {
+      const question = interview.questions[i].question;
+      const answer = answers[i] || '';
+
+      
+      scoredQuestions.push({
+        question,
+        answer
+      });
+    }
+// console.log("report:",report)
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
     interview.questions = scoredQuestions;
     interview.totalScore = Math.round(score);
     interview.report = report;
@@ -285,7 +363,11 @@ router.post('/submit/:interviewId', async (req, res) => {
 
     await interview.save();
 
+<<<<<<< HEAD
     res.json({
+=======
+    res.json({ 
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
       message: 'Interview submitted successfully',
       interviewId: interview._id,
       totalScore: interview.totalScore
@@ -309,21 +391,42 @@ router.get('/report/:interviewId', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Get all interviews for recruiter
+=======
+// Get all interviews for recruiter (protected route)
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 router.get('/all', auth, async (req, res) => {
   try {
     const decoded = req.user;
 
+<<<<<<< HEAD
+=======
+    // Ensure the user is a recruiter
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
     if (!decoded || decoded.role !== 'recruiter') {
       return res.status(403).json({ error: 'Unauthorized - Recruiter access required' });
     }
 
+<<<<<<< HEAD
     const recruiterJobs = await Job.find({ recruiter: decoded.id }).select('_id');
     const jobIds = recruiterJobs.map(job => job._id);
 
     if (jobIds.length === 0) return res.json([]);
 
     const interviews = await Interview.find({ job: jobIds })
+=======
+    // Fetch jobs posted by this recruiter
+    const recruiterJobs = await Job.find({ recruiter: decoded.id }).select('_id');
+    const jobIds = recruiterJobs.map(job => job._id);
+
+    if (jobIds.length === 0) {
+      return res.json([]); // No jobs, no interviews
+    }
+
+    // Fetch interviews linked to the recruiter's jobs
+    const interviews = await Interview.find({ job:  jobIds  })
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
       .populate('job', 'title company')
       .sort({ startedAt: -1 });
 
@@ -334,4 +437,8 @@ router.get('/all', auth, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 module.exports = router;

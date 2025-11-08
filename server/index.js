@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const express = require('express')
 // const app = express()
 // const cors=require('cors');
@@ -36,6 +37,8 @@
 // app.listen(port, '0.0.0.0', () => {
 //   console.log(`Backend has started and listening on port ${port}`)
 // })
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 const express = require('express')
 const app = express()
 const cors=require('cors');

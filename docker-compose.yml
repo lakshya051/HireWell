@@ -38,6 +38,7 @@
 #       - server
 
 
+<<<<<<< HEAD
 # services:
 #   server:
 #     image: hirewellapp.azurecr.io/hirewell-server:v1
@@ -80,6 +81,9 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
+=======
+services:
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
   server:
     image: hirewellapp.azurecr.io/hirewell-server:v1
     ports:
@@ -87,8 +91,11 @@ services:
     env_file:
       - ./server/.env
     container_name: hireai-server
+<<<<<<< HEAD
     depends_on:
       - kafka
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 
   client:
     image: hirewellapp.azurecr.io/hirewell-client:v1

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const express = require('express');
 // const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken');
@@ -91,11 +92,16 @@
 // module.exports= router;
 
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../Schema/UserSchema');
+<<<<<<< HEAD
 const { isValidEmail } = require('../utils/emailValidator'); // Add this line
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 
 const auth = require('../middleware/auth');
 const router = express.Router();
@@ -103,19 +109,28 @@ const router = express.Router();
 // Signup
 router.post('/signup', async (req, res) => {
   const { fullName, email, password, role } = req.body;
+<<<<<<< HEAD
 
   if (!isValidEmail(email)) {
     return res.status(400).json({ error: 'Invalid email address or a disposable email was used' });
   }
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
   try {
     const existingUser = await User.findOne({ email });
     
     if (existingUser) return res.status(400).json({ error: 'Email already registered' });
 
+<<<<<<< HEAD
     const passwordHash = await bcrypt.hash(password, 10);
 
     const user = await User.create({ fullName, email, passwordHash, role });
+=======
+const passwordHash = await bcrypt.hash(password, 10);
+
+const user = await User.create({ fullName, email, passwordHash, role });
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
@@ -127,11 +142,14 @@ router.post('/signup', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+<<<<<<< HEAD
 
   if (!isValidEmail(email)) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
@@ -192,4 +210,8 @@ router.get('/me',auth, async (req, res) => {
 });
 
 
+<<<<<<< HEAD
 module.exports= router;
+=======
+module.exports= router;
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4

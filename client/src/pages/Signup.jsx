@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import { useState } from "react";
 // import { useNavigate, Link, Navigate } from "react-router-dom";
 // import { useAuth } from "../context/AuthContext";
@@ -123,6 +124,8 @@
 //   );
 // }
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 import { useState } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -153,6 +156,7 @@ export default function Signup() {
     setLoading(true);
     setError("");
 
+<<<<<<< HEAD
     // Client-side format validation using a regular expression.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
@@ -161,6 +165,8 @@ export default function Signup() {
       return;
     }
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
     const result = await signup(form);
     
     if (result.success) {
@@ -254,4 +260,8 @@ export default function Signup() {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4

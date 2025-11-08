@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const express = require('express');
 // const router = express.Router();
 // const Job = require('../Schema/JobSchema');
@@ -157,13 +158,20 @@
 
 
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 const express = require('express');
 const router = express.Router();
 const Job = require('../Schema/JobSchema');
 const auth = require('../middleware/auth');
+<<<<<<< HEAD
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+=======
+const  { GoogleGenAI } = require("@google/genai");
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 
 // Post a new job (recruiters only)
 router.post('/post', auth, async (req, res) => {
@@ -190,12 +198,18 @@ Use this to generate a job posting JSON that strictly follows this schema:
   "description": string (3–4 lines),
   "company": string (use "Confidential" or a generic name),
   "location": string (use "Remote" if not specified),
+<<<<<<< HEAD
   "type": string (enum: ['full-time', 'part-time', 'internship', 'contract', 'freelance', 'remote']),
+=======
+  "type": string (enum: ['full-time', 'part-time', 'internship', 'contract', 'freelance', 'remote'],
+  ),
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
   "salaryRange": {
     "min": number (reasonable lower bound in INR),
     "max": number (reasonable upper bound in INR),
     "currency": "INR"
   },
+<<<<<<< HEAD
   "skillsRequired": array of lowercase trimmed strings,
   "experienceRequired": string,
   "education": string (default to "Not specified"),
@@ -211,12 +225,34 @@ Only return a valid JSON object. No explanation or extra text — only the JSON 
 
     // ✅ Extract text safely
     const textOutput = result.response.text();
+=======
+  "skillsRequired": array of lowercase trimmed strings ,
+  "experienceRequired": string (same as exsperience),
+  "education": string (default to "Not specified"),
+  "deadline": null,
+  
+}
+
+Only return a valid JSON object. No explanation or extra text or backticks nothing just an object without any enclosing string ''' jsut an object like 
+{
+  ...rest of data here
+}.
+`;
+
+    const result = await ai.models.generateContent({
+      model: "gemini-2.0-flash", // or "gemini-2.0-pro", based on access
+      contents: [{ role: "user", parts: [{ text: prompt }] }]
+    });
+
+    const textOutput = result.text;
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
     if (!textOutput) {
       return res.status(500).json({ error: "AI failed to generate job data." });
     }
 
     let cleanResponse = textOutput.trim();
     cleanResponse = cleanResponse.replace(/^```json\s*|\s*```$/g, '');
+<<<<<<< HEAD
 
     let jobData = JSON.parse(cleanResponse);
 
@@ -224,11 +260,23 @@ Only return a valid JSON object. No explanation or extra text — only the JSON 
     jobData.recruiter = req.user.id;
 
     // Save to database
+=======
+    
+    console.log(cleanResponse)
+    let jobData = JSON.parse(cleanResponse);
+    // Replace placeholder with real recruiter ID
+    jobData.recruiter = req.user.id;
+    // The line that caused the error has been removed. Mongoose will use the default value.
+
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
     const newJob = new Job(jobData);
     await newJob.save();
 
     res.status(201).json({ message: "Job posted", job: newJob });
+<<<<<<< HEAD
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
   } catch (err) {
     console.error("Job post error:", err);
     res.status(500).json({ error: "Failed to post job" });
@@ -262,7 +310,10 @@ router.get('/apply/:jobId', async (req, res) => {
     res.status(500).json({ error: 'Failed to apply' });
   }
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 router.get('/view/:jobId', async (req, res) => {
   try {
     const job = await Job.findById(req.params.jobId);
@@ -270,10 +321,18 @@ router.get('/view/:jobId', async (req, res) => {
 
     res.json(job);
   } catch (err) {
+<<<<<<< HEAD
     res.status(500).json({ error: 'Failed to fetch job' });
   }
 });
 
+=======
+    res.status(500).json({ error: 'Failed to Fetch' });
+  }
+});
+
+
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
 // Get recruiter's jobs
 router.get('/my-jobs', auth, async (req, res) => {
   try {
@@ -310,3 +369,7 @@ router.delete('/:jobId', auth, async (req, res) => {
 });
 
 module.exports = router;
+<<<<<<< HEAD
+=======
+
+>>>>>>> daf93ed8df78b878cc5894a5b3af2db966a1cfe4
